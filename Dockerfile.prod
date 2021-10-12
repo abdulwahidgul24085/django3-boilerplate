@@ -1,0 +1,41 @@
+FROM python:3.9-slim-buster
+
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+# ENV PATH="/scripts:${PATH}"
+
+RUN pip install --upgrade pip
+COPY ./requirements ./requirements
+#COPY ./requirements.txt /requirements.txt
+
+# packages required for setting up WSGI
+RUN apt-get update
+RUN apt-get install -y --no-install-recommends gcc postgresql libc-dev python3-dev  libpq-dev
+
+RUN pip install -r ./requirements/prod.txt
+
+RUN mkdir /src
+COPY . .
+WORKDIR /src
+
+# COPY ./scripts /scripts
+
+# RUN chmod +x /scripts/*
+
+# # folder to serve media files by nginx
+# RUN mkdir -p /vol/web/media
+# # folder to serve static files by nginx
+# RUN mkdir -p /vol/web/static
+
+# always good to run our source code with a different user other than root user
+# RUN useradd awg
+# RUN chown -R user:awg /vol
+# # chmod 755 means full access to owner and read-access to everyone else
+# RUN chmod -R 755 /vol/web
+# RUN chown -R user:awg /src
+# RUN chmod -R 755 /src
+# # switch to our user
+# USER awg
+
+COPY ./entrypoint.prod.sh /
+RUN chmod +x /entrypoint.prod.sh

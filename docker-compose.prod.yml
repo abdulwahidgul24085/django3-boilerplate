@@ -1,0 +1,75 @@
+version: "3.7"
+
+services:
+  app:
+    container_name: app_web
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+    # command: python manage.py runserver 0.0.0.0:8000
+    command: gunicorn core.wsgi:application --bind 0.0.0.0:8000
+    image: app:web
+    restart: always
+    volumes:
+      - ./:/src
+      - ./core/static:/src/core/static
+      - ./core/media:/src/core/media
+    expose:
+      - 8000
+    ports:
+      - 27017
+    env_file:
+      - ./config/prod/django.env
+    # depends_on:
+    # - db
+  # db:
+  #   container_name: app_db
+  #   image: postgres:latest
+  #   volumes:
+  #     - /home/awg/db/postgres:/var/lib/postgresql/data/
+  #   env_file:
+  #     - ./config/prod/db.env
+  #   restart: always
+  nginx:
+    image: nginx:1.19.0-alpine
+    container_name: app_nginx
+    volumes:
+      - ./config/prod/nginx/conf.d:/etc/nginx/conf.d
+      - ./core/static:/src/core/static
+      - ./core/media:/src/core/media
+    ports:
+      - 80:80
+    depends_on:
+      - app
+#   nginx-proxy:
+#     build:
+#       context: config/prod/nginx
+#       dockerfile: Dockerfile
+#     container_name: nginx-proxy
+#     restart: always
+#     volumes:
+#       - certs:/etc/nginx/certs
+#       - html:/usr/share/nginx/html
+#       - vhost:/etc/nginx/vhost.d
+#       - /var/run/docker.sock:/tmp/docker.sock:ro
+#     ports:
+#       - 443:443
+#       - 80:80
+#     depends_on:
+#       - be
+#   nginx-proxy-letsencrypt:
+#     image: jrcs/letsencrypt-nginx-proxy-companion
+#     env_file:
+#       - ./config/prod/nginx/.env.proxy-companion
+#     volumes:
+#       - /var/run/docker.sock:/var/run/docker.sock:ro
+#       - certs:/etc/nginx/certs
+#       - html:/usr/share/nginx/html
+#       - vhost:/etc/nginx/vhost.d
+#     depends_on:
+#       - nginx-proxy
+
+# volumes:
+#   certs:
+#   html:
+#   vhost:
