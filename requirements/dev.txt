@@ -3,5 +3,5 @@ django-debug-toolbar==3.2.2
 pytest==6.2.5
 pytest-cov==3.0.0
 pytest-django==4.4.0
-ipython==7.28.0
+ipython==7.31.1
 mixer==7.1.2
