@@ -11,7 +11,7 @@ django-filter==21.1
 django-imagekit==4.0.2
 django-tables2==2.4.1
 idna==3.2
-oauthlib==3.2.1
+oauthlib==3.2.2
 pilkit==2.0
 Pillow==9.0.0
 psycopg2==2.9.1
