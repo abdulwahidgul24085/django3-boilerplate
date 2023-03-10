@@ -1,7 +1,6 @@
 -r common.txt
-django-debug-toolbar==3.2.2
-pytest==6.2.5
-pytest-cov==3.0.0
-pytest-django==4.4.0
-ipython==7.31.1
-mixer==7.1.2
+django_debug_toolbar==3.8.1
+pytest==7.2.2
+pytest-cov==4.0.0
+pytest-django==4.5.2
+mixer==7.2.2
